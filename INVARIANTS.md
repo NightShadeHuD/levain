@@ -45,6 +45,10 @@ give, within 2%, up to the cap.
 *Why:* if time away is cheaper or richer than play, players learn to game it instead of enjoying either.
 *Check:* AC-26, AC-27.
 
+**A4. A step always runs in the design's order** (design 3.2), and short inputs are shared in proportion.
+*Why:* otherwise the result depends on the order code happens to run in, and A1 breaks quietly.
+*Check:* AC-55.
+
 ---
 
 ## §B Core and page
@@ -77,6 +81,18 @@ give, within 2%, up to the cap.
 *Why:* the game's depth is in the numbers; a player who cannot see them cannot plan.
 *Check:* AC-51 and review of each page task.
 
+**C4. Nothing costs flour or sugar.** Growing costs are paid only in resources with no cap.
+*Why:* a growing cost in a capped resource eventually exceeds the cap and locks the game (design v1's Pantry).
+*Check:* AC-59.
+
+**C5. Bonuses add within a source and multiply across sources** (design 3.3). No other rule.
+*Why:* each task inventing its own stacking makes the same bonus worth different amounts in different places.
+*Check:* AC-56.
+
+**C6. Values hold at 1e300, and shelf 2,000 is the last shelf.**
+*Why:* endless exponential growth passes JavaScript's limit near shelf 2,550 and turns the save into NaN.
+*Check:* AC-57.
+
 ---
 
 ## §D Saves
@@ -93,6 +109,10 @@ give, within 2%, up to the cap.
 the old version.
 *Why:* an idle game's save holds weeks of a player's time.
 *Check:* AC-12.
+
+**D4. One tab writes at a time, and nothing writes over a newer save.**
+*Why:* two open tabs that both save let the older one erase the newer progress, the commonest idle-game loss.
+*Check:* AC-72.
 
 ---
 
@@ -118,6 +138,11 @@ the old version.
 the Bakery, Crumb Shots and the Chronicle all survive a bake.
 *Why:* a reset that takes something earned breaks the promise every prestige game makes.
 *Check:* AC-31, AC-39.
+
+**F3. A battle can never empty the jar by itself.** Half of a beaten squad comes home, and morale stops
+the march after 3 losses on one jar.
+*Why:* version 1's rules let a squad bleed a jar of 325 cells down to 3 (the model run in SPEC §5).
+*Check:* AC-22, AC-63, and the pacing target "cells after an hour".
 
 **F2. The player sees an upgrade's exact effect before paying for it.**
 *Why:* the choices between runs are the game's depth; a blind choice is not a choice.

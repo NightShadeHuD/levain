@@ -1,44 +1,17 @@
-# Line endings, pinned so every machine and every checkout agrees.
-#
-# Installed by init-project.sh, and the scaffold ships it because a project created from here should not
-# have to rediscover that a cross-platform tree needs this.
-#
-# WHY THIS EXISTS. With no .gitattributes, line endings depend on each machine's `core.autocrlf` setting,
-# so the same commit can be checked out with different bytes on a Windows machine and on a Mac or Linux
-# one. Three consequences:
-#
-#   - A content fingerprint, a canonical byte comparison or a digest computed over TEXT differs between
-#     machines. Pin the endings BEFORE something hashes a file, not after the digests disagree.
-#   - A diff shows every line of a file as changed when only its endings moved, which hides the real
-#     change inside the noise - the failure mode where a reviewer stops reading.
-#   - bash reads a CR as part of the line, so a script or config file with CRLF endings runs differently.
-#
-# `text=auto` normalises to LF in the repository and lets git decide the working tree. Every text file is
-# therefore stored identically and compared identically, whatever a contributor's git config says.
-
+# Line endings, pinned so every platform checks out the same bytes.
 * text=auto
-
-# Explicit, because auto-detection gets these wrong and a wrong guess corrupts them.
 *.json      text
 *.md        text
 *.sh        text eol=lf
 *.py        text eol=lf
 *.yml       text eol=lf
-# Read by bash, with no extension to match above: a CR turns `'-'` into a value that is not the sentinel.
 gate.config text eol=lf
 gate.config.pristine text eol=lf
 pre-push    text eol=lf
-# Every git hook, by folder, because hooks have no extension and bash runs them. In a clone made with
-# core.autocrlf=true, tests/hooks/pre-commit came out with 61 CRLF endings while pre-push, named above, had
-# none (research-claude-manager, 2026-11-10). The scaffold keeps its hooks in mechanisms/hooks/;
-# init-project.sh installs them into a project's tests/hooks/.
 mechanisms/hooks/* text eol=lf
 tests/hooks/*      text eol=lf
-# Read by cmd.exe, which needs CRLF: a .cmd or .bat with LF endings can skip or merge lines.
 *.cmd       text eol=crlf
 *.bat       text eol=crlf
-
-# Binary: never converted, never diffed as text. `-text` is what stops a checkout from rewriting bytes.
 *.png       binary
 *.jpg       binary
 *.jpeg      binary

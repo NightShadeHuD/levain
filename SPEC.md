@@ -3,8 +3,8 @@
 ## 1. What this is
 
 Levain is a small, deep idle game that runs in the browser: a civilization rises in a jar of sourdough
-starter. The player is the Hand that feeds it. The design, with every formula and starting constant, is
-`docs/GAME-DESIGN.md`. This file says what counts as done, and in what order to build it.
+starter. The player is the Hand that feeds it. The design, with every formula, starting constant and edge case, is
+`docs/GAME-DESIGN.md` (version 2). This file says what counts as done, and in what order to build it.
 
 It is open source (MIT). It is built by agents working under agent-scaffold, mostly by Kilo Code on
 local models, so every task is small and names the tests that settle it.
@@ -72,7 +72,7 @@ name, and "passes" means its output shows the test passed and none failed.
 | # | Claim | Check |
 |---|---|---|
 | AC-21 | Mold HP and attack follow the formulas. | Run: `npx vitest run -t "fridge: mold HP and attack match the formulas"`. True when: it passes |
-| AC-22 | A beaten squad loses its guards and waits for a full squad. | Run: `npx vitest run -t "fridge: a beaten squad loses its guards and waits"`. True when: it passes |
+| AC-22 | A beaten squad loses half its guards, the rest come home, and the mold keeps its damage. | Run: `npx vitest run -t "fridge: a beaten squad loses half its guards and the mold keeps its damage"`. True when: it passes |
 | AC-23 | Crocks from shelf 10 bank Mother by the formula. | Run: `npx vitest run -t "fridge: Crocks bank Mother by the formula"`. True when: it passes |
 | AC-24 | Every 5th Crock is a Mold Monarch and drops a strain. | Run: `npx vitest run -t "fridge: every 5th Crock is a Monarch and drops a strain"`. True when: it passes |
 | AC-25 | Shelf milestones unlock in order. | Run: `npx vitest run -t "fridge: shelf milestones unlock in order"`. True when: it passes |
@@ -120,6 +120,33 @@ name, and "passes" means its output shows the test passed and none failed.
 | AC-52 | Reduced motion stops the jar's animation. | Run: `npx vitest run -t "ui: reduced motion stops the animation"`. True when: it passes |
 | AC-53 | The built game is one folder under 500 KB. | Run: `npm run build && npm run size`. True when: it prints `dist: <n> KB` with n below 500 |
 | AC-54 | The owner plays for an hour and wants to keep going. | The owner's own note after an hour's play, recorded in section 5 |
+
+### Version 2: rules and edge cases
+
+| # | Claim | Check |
+|---|---|---|
+| AC-55 | When sugar runs short, growth, Fermenters and Sourers each get the same fraction of what they asked for. | Run: `npx vitest run -t "step: short sugar is shared in proportion"`. True when: it passes |
+| AC-56 | Percent bonuses add within a source and multiply across sources; a source never falls below 0.1. | Run: `npx vitest run -t "bonuses: sources add within and multiply across"`. True when: it passes |
+| AC-57 | Values hold at 1e300, and shelf 2,000 is the last shelf. | Run: `npx vitest run -t "numbers: values hold at 1e300 and shelf 2000 is the last"`. True when: it passes |
+| AC-58 | Costs round up and amounts round down on screen, and affordability uses exact numbers. | Run: `npx vitest run -t "format: costs round up, amounts down, affordability is exact"`. True when: it passes |
+| AC-59 | No building or research cost uses flour or sugar. | Run: `npx vitest run -t "costs: nothing costs flour or sugar"`. True when: it passes |
+| AC-60 | Hydration scales growth and Rise by h and Tang by 2 − h. | Run: `npx vitest run -t "hydration: growth, rise and tang follow the slider"`. True when: it passes |
+| AC-61 | Discard turns 10, 25 or 50% of idle cells (rounded down) into one cracker each. | Run: `npx vitest run -t "discard: idle cells become crackers"`. True when: it passes |
+| AC-62 | At 15 minutes of batch time the highest tally becomes the doctrine, or the Middle Rise within 10%. | Run: `npx vitest run -t "doctrine: the highest tally at 15 minutes becomes the doctrine"`. True when: it passes |
+| AC-63 | After 3 lost squads on one jar, guards refuse to march until 25% stronger. | Run: `npx vitest run -t "fridge: guards refuse after 3 losses until 25% stronger"`. True when: it passes |
+| AC-64 | A squad forms only when its whole target of idle cells is free. | Run: `npx vitest run -t "fridge: a squad forms only from free idle cells"`. True when: it passes |
+| AC-65 | Gear levels and costs follow the table. | Run: `npx vitest run -t "fridge: gear levels and costs match the table"`. True when: it passes |
+| AC-66 | A foray costs 10 × shelf crackers, fights 5 jars, pays ×3, and drops strains at 25% from shelf 10. | Run: `npx vitest run -t "forays: cost, rewards and drops"`. True when: it passes |
+| AC-67 | A Monarch with a grudge has +10% HP and drops a strain one tier higher. | Run: `npx vitest run -t "fridge: a grudge Monarch is stronger and drops a higher tier"`. True when: it passes |
+| AC-68 | Treatises open only after every research is bought, and their cost grows by 1.5. | Run: `npx vitest run -t "research: Treatises open after every research"`. True when: it passes |
+| AC-69 | Memory keeps exactly the chosen research, and never one whose prerequisite is not kept. | Run: `npx vitest run -t "heritage: Memory keeps the chosen research and its prerequisites"`. True when: it passes |
+| AC-70 | A Trial starts at a bake, and abandoning it keeps the batch without the rule or the win. | Run: `npx vitest run -t "trials: start at a bake, abandon keeps the batch"`. True when: it passes |
+| AC-71 | A gap of 60 s or more is time away, a negative gap counts as 0, and no gap exceeds the cap. | Run: `npx vitest run -t "time: gaps of 60 s or more are time away and negative gaps are zero"`. True when: it passes |
+| AC-72 | A second tab opens read-only, and no tab writes over a save with a higher save counter. | Run: `npx vitest run -t "save: a second tab is read-only and never overwrites a newer save"`. True when: it passes |
+| AC-73 | Full or blocked storage shows a warning, and the game keeps running. | Run: `npx vitest run -t "save: full or blocked storage warns and the game runs on"`. True when: it passes |
+| AC-74 | A save from a newer version is refused and changes nothing. | Run: `npx vitest run -t "save: a newer version is refused"`. True when: it passes |
+| AC-75 | A strain that drops onto a full shelf becomes spores, and the game says so. | Run: `npx vitest run -t "strains: a drop onto a full shelf becomes spores"`. True when: it passes |
+| AC-76 | When deaths leave too few cells, jobs are cut in the design's order. | Run: `npx vitest run -t "jobs: after losses, jobs are cut in the set order"`. True when: it passes |
 
 ## 4. Method
 
@@ -175,6 +202,11 @@ sim/                  the pacing bot (npm run sim)
   `bash tests/gates.sh` green. Kilo writes what happened in `docs/kilo-notes.md`.
 - **D-10** The player's time is respected: design section 2, rule 3, and INVARIANTS §E.
 - **D-11** UI tests use Vitest with the happy-dom environment, a development dependency only.
+- **D-12** The repository is public. Nothing personal goes into it: no names, home-folder paths, e-mail
+  addresses or notes about other projects. A local check refuses a push that contains any (owner,
+  2026-11-25).
+- **D-13** Design version 2 (2026-11-25) fixes version 1's bugs and adds hydration, discard, doctrines
+  and forays. Where the design and this file disagree, raise it with the owner; do not pick one.
 
 ### Plan
 
@@ -184,26 +216,31 @@ row's State when it changes. Strike a dropped task through with the reason, and 
 | Task | Phase | What it builds | Criteria | Decisions | State |
 |---|---|---|---|---|---|
 | T-1 | 0 Foundations | Vite, TypeScript and Vitest skeleton; the seeded generator and its test; the core purity test; agent-scaffold gates configured. **Risk: low.** | AC-1, AC-2, AC-3, AC-4, AC-5 | D-1, D-2, D-5 | done at `0068502` |
-| T-2 | 0 Foundations | `format.ts` (design section 15's table) and `cost.ts` (single cost, cost of n, most affordable n). **Risk: low.** | AC-6, AC-7 | D-4, D-7 | ☐ |
-| T-3 | 0 Foundations | `GameState`, `newGame(seed)`, `step(state, seconds)`, the Feed action, and the guard test against NaN, Infinity and negatives. **Risk: medium.** | AC-8, AC-9, AC-13 | D-2, D-3 | ☐ |
-| T-4 | 0 Foundations | Saving: serialise, load, export, import, the version field, the migration list. **Risk: medium.** | AC-10, AC-11, AC-12 | D-6 | ☐ |
+| T-2 | 0 Foundations | `format.ts` (design section 15's table) and `cost.ts` (single cost, cost of n, most affordable n). **Risk: low.** | AC-6, AC-7, AC-58 | D-4, D-7 | ☐ |
+| T-3 | 0 Foundations | `GameState`, `newGame(seed)`, `step(state, seconds)`, the Feed action, and the guard test against NaN, Infinity and negatives. **Risk: medium.** | AC-8, AC-9, AC-13, AC-55, AC-56, AC-57 | D-2, D-3 | ☐ |
+| T-4 | 0 Foundations | Saving: serialise, load, export, import, the version field, the migration list. **Risk: medium.** | AC-10, AC-11, AC-12, AC-74 | D-6 | ☐ |
 | T-5 | 1 One batch | Cells, growth and housing. **Risk: low.** | AC-14 | D-3, D-7 | ☐ |
-| T-6 | 1 One batch | Jobs: assign, unassign, rates, inputs. **Risk: low.** | AC-15, AC-16 | D-7 | ☐ |
-| T-7 | 1 One batch | Buildings: buy one, buy most affordable, effects. **Risk: low.** | AC-17 | D-7 | ☐ |
+| T-6 | 1 One batch | Jobs: assign, unassign, rates, inputs. **Risk: low.** | AC-15, AC-16, AC-76 | D-7 | ☐ |
+| T-7 | 1 One batch | Buildings: buy one, buy most affordable, effects. **Risk: low.** | AC-17, AC-59 | D-7 | ☐ |
 | T-8 | 1 One batch | Research: the table, prerequisites, unlock flags. **Risk: low.** | AC-18 | D-7 | ☐ |
+| T-31 | 1 One batch | Hydration and Discard (design 4.4, 4.6). **Risk: low.** | AC-60, AC-61 | D-7 | ☐ |
+| T-34 | 1 One batch | Treatises (design 4.7). **Risk: low.** | AC-68 | D-7 | ☐ |
 | T-9 | 1 One batch | Reveal rules: which tabs and buttons show, from the state. **Risk: low.** | AC-19 | D-2 | ☐ |
 | T-10 | 1 One batch | The page: panels for Jar, Work, Build, Murmurs; the jar canvas; the game loop and autosave every 30 s. **Risk: medium.** | AC-1, AC-20 | D-1, D-11 | ☐ |
-| T-11 | 2 The Fridge | Combat: squad, molds, jars, Crocks, losses, rewards. **Risk: medium.** | AC-21, AC-22 | D-3, D-7 | ☐ |
+| T-35 | 1 One batch | Save safety in the page: one tab at a time, persistent storage, storage warnings, export to a file, the weekly reminder (design 11). **Risk: medium.** | AC-72, AC-73 | D-6 | ☐ |
+| T-11 | 2 The Fridge | Combat: squad, molds, jars, Crocks, losses, rewards. **Risk: medium.** | AC-21, AC-22, AC-63, AC-64, AC-65 | D-3, D-7 | ☐ |
 | T-12 | 2 The Fridge | Banked Mother, Mold Monarchs (drops wait for T-19: bank a placeholder), shelf milestones. **Risk: low.** | AC-23, AC-24, AC-25 | D-7 | ☐ |
-| T-13 | 2 The Fridge | Time away: counted time, the cap, half speed, Flavor, the return card's data. **Risk: medium.** | AC-26, AC-27, AC-28, AC-29 | D-3, D-10 | ☐ |
+| T-32 | 2 The Fridge | Doctrines: the three tallies, the choice at 15 minutes, bonuses and drawbacks (design 4.8). **Risk: low.** | AC-62 | D-7 | ☐ |
+| T-13 | 2 The Fridge | Time away: counted time, the cap, half speed, Flavor, the return card's data. **Risk: medium.** | AC-26, AC-27, AC-28, AC-29, AC-71 | D-3, D-10 | ☐ |
 | T-14 | 2 The Fridge | The page: Fridge tab, the return card. **Risk: low.** | AC-20 | D-11 | ☐ |
 | T-15 | 3 Baking | Bake: the gate, what is kept, claimed Mother, a loaf record. **Risk: high.** | AC-30, AC-31, AC-32 | D-6 | ☐ |
-| T-16 | 3 Baking | Heritage, including Memory. **Risk: medium.** | AC-33, AC-34 | D-7 | ☐ |
+| T-16 | 3 Baking | Heritage, including Memory. **Risk: medium.** | AC-33, AC-34, AC-69 | D-7 | ☐ |
 | T-17 | 3 Baking | The pacing bot (`npm run sim`) and tuning of `data.ts` until design section 14's targets hold. **Risk: medium.** | AC-35 | D-7 | ☐ |
 | T-18 | 3 Baking | The page: Bake and Heritage tabs, with exact numbers before each purchase. **Risk: low.** | AC-20 | D-11 | ☐ |
-| T-19 | 4 Depth | Heirloom strains: drops, tiers, bonuses, names, slots, scrap, reroll. **Risk: medium.** | AC-24, AC-38, AC-39, AC-40 | D-5, D-7 | ☐ |
+| T-19 | 4 Depth | Heirloom strains: drops, tiers, bonuses, names, slots, scrap, reroll. **Risk: medium.** | AC-24, AC-38, AC-39, AC-40, AC-67, AC-75 | D-5, D-7 | ☐ |
+| T-33 | 4 Depth | Forays and Mold Monarch names, lines and grudges (design 5.6, 5.7). **Risk: low.** | AC-66, AC-67 | D-7 | ☐ |
 | T-20 | 4 Depth | The Bakery: loaves, the window, variety, full rows, the 8 arrangements (fix the list in the design first). **Risk: medium.** | AC-41, AC-42, AC-43 | D-7 | ☐ |
-| T-21 | 4 Depth | Grain Trials: rules and rewards. **Risk: medium.** | AC-36, AC-37 | D-7 | ☐ |
+| T-21 | 4 Depth | Grain Trials: rules and rewards. **Risk: medium.** | AC-36, AC-37, AC-70 | D-7 | ☐ |
 | T-22 | 4 Depth | Automation helpers. **Risk: low.** | AC-44 | D-7 | ☐ |
 | T-23 | 4 Depth | Crumb Shots (40) and Chronicle pages (about 30); all text in `text.ts`. **Risk: low.** | AC-45, AC-46 | D-7 | ☐ |
 | T-24 | 4 Depth | Daily flour. **Risk: low.** | AC-47, AC-48 | D-10 | ☐ |
@@ -222,3 +259,4 @@ State is one of: ☐ not started, in progress, done at `<sha>`, ~~dropped~~ with
 
 | Date | Revision | Command | Result | For |
 |---|---|---|---|---|
+| 2026-11-25 | design v2 | a rough Python model of the first batches (1 s steps, simple bot) | v1 constants: shelf 10 at 16 min, 3 Mother at the first bake, 3 cells of 325 after a death spiral; v2 constants: Fermentation 2.1 min, Fridge 12.6 min, shelf 10 at 37.0 min, about 280 Mother, second batch about 10% sooner | design v2, T-17 |
