@@ -153,6 +153,15 @@ name, and "passes" means its output shows the test passed and none failed.
 | AC-80 | Splits compare the batch with the best batch at every fifth shelf. | Run: `npx vitest run -t "splits: each fifth shelf is compared with the best batch"`. True when: it passes |
 | AC-81 | The next-goal line always names an unlock with its progress, until everything is unlocked. | Run: `npx vitest run -t "goal: the next-goal line always names the nearest unlock"`. True when: it passes |
 | AC-82 | A clock that goes back and then forward pays the same hours only once. | Run: `npx vitest run -t "time: a clock moved back then forward pays once"`. True when: it passes |
+| AC-83 | Every sprite is drawn from palette data in code, and the scene draws at most 300 cells and 60 particles. | Run: `npx vitest run -t "scene: sprites come from code and draw counts are capped"`. True when: it passes |
+| AC-84 | With reduced motion the scene draws still frames only, and the Great Rising is one frame. | Run: `npx vitest run -t "scene: reduced motion draws still frames"`. True when: it passes |
+| AC-85 | When the canvas cannot start, the game runs on its panels and says so. | Run: `npx vitest run -t "scene: no canvas, the game still runs"`. True when: it passes |
+| AC-86 | The rack holds 300 loaves; the 301st sells the smallest and pays its refund. | Run: `npx vitest run -t "bakery: a full rack sells the smallest loaf"`. True when: it passes |
+| AC-87 | Time away never bakes, and daily flour and Feasts do not apply during it. | Run: `npx vitest run -t "away: no bakes, daily flour or Feasts while away"`. True when: it passes |
+| AC-88 | Raisins only give rewards that work at that moment. | Run: `npx vitest run -t "raisins: only rewards that work now"`. True when: it passes |
+| AC-89 | The Wall of the Risen keeps the last 100 captains across bakes. | Run: `npx vitest run -t "wall: keeps the last 100 captains across bakes"`. True when: it passes |
+| AC-90 | A Feast doubles every job for 60 s once a batch from shelf 20, and keeps the squad home. | Run: `npx vitest run -t "feast: once a batch, jobs double, squad home"`. True when: it passes |
+| AC-91 | A read-only tab never steps the game. | Run: `npx vitest run -t "save: a read-only tab never steps the game"`. True when: it passes |
 
 ## 4. Method
 
@@ -188,7 +197,8 @@ sim/                  the pacing bot (npm run sim)
 
 ### Decisions
 
-- **D-1** TypeScript (strict), Vite and Vitest. No UI framework. No runtime dependency: everything the
+- **D-1** TypeScript (strict), Vite and Vitest. No UI framework, no graphics library (the pixel art is drawn
+  by code on one canvas, design 19). No runtime dependency: everything the
   player downloads is our own code.
 - **D-2** `src/core` is pure. It never imports from `src/ui`, never touches `document` or `window`, and
   never reads the clock or `Math.random`. Time comes in as an argument; randomness comes from the
@@ -233,11 +243,12 @@ row's State when it changes. Strike a dropped task through with the reason, and 
 | T-34 | 1 One batch | Treatises (design 4.7). **Risk: low.** | AC-68 | D-7 | ☐ |
 | T-9 | 1 One batch | Reveal rules: which tabs and buttons show, from the state. **Risk: low.** | AC-19 | D-2 | ☐ |
 | T-10 | 1 One batch | The page: panels for Jar, Work, Build, Murmurs; the jar canvas; the game loop and autosave every 30 s. **Risk: medium.** | AC-1, AC-20 | D-1, D-11 | ☐ |
-| T-35 | 1 One batch | Save safety in the page: one tab at a time, persistent storage, storage warnings, export to a file, the weekly reminder (design 11). **Risk: medium.** | AC-72, AC-73 | D-6 | ☐ |
+| T-37 | 1 One batch | The jar scene: the palette, sprites from code, the jar, dough, cells with job hats, bubbles, flour puffs, the 30-frame cap, reduced motion and the no-canvas fallback (design 19). **Risk: medium.** | AC-83, AC-84, AC-85, AC-52 | D-1 | ☐ |
+| T-35 | 1 One batch | Save safety in the page: one tab at a time, persistent storage, storage warnings, export to a file, the weekly reminder (design 11). **Risk: medium.** | AC-72, AC-73, AC-91 | D-6 | ☐ |
 | T-11 | 2 The Fridge | Combat: squad, molds, jars, Crocks, losses, rewards. **Risk: medium.** | AC-21, AC-22, AC-63, AC-64, AC-65, AC-57 | D-3, D-7 | ☐ |
 | T-12 | 2 The Fridge | Banked Mother, Mold Monarchs (drops wait for T-19: bank a placeholder), shelf milestones. **Risk: low.** | AC-23, AC-24, AC-25 | D-7 | ☐ |
 | T-32 | 2 The Fridge | Doctrines: the three tallies, the choice at 15 minutes, bonuses and drawbacks (design 4.8). **Risk: low.** | AC-62 | D-7 | ☐ |
-| T-13 | 2 The Fridge | Time away: counted time, the cap, half speed, Flavor, the return card's data. **Risk: medium.** | AC-26, AC-27, AC-28, AC-29, AC-71, AC-82 | D-3, D-10 | ☐ |
+| T-13 | 2 The Fridge | Time away: counted time, the cap, half speed, Flavor, the return card's data. **Risk: medium.** | AC-26, AC-27, AC-28, AC-29, AC-71, AC-82, AC-87 | D-3, D-10 | ☐ |
 | T-14 | 2 The Fridge | The page: Fridge tab, the return card. **Risk: low.** | AC-20 | D-11 | ☐ |
 | T-15 | 3 Baking | Bake: the gate, what is kept, claimed Mother, a loaf record. **Risk: high.** | AC-30, AC-31, AC-32 | D-6 | ☐ |
 | T-16 | 3 Baking | Heritage, including Memory. **Risk: medium.** | AC-33, AC-34, AC-69 | D-7 | ☐ |
@@ -245,8 +256,10 @@ row's State when it changes. Strike a dropped task through with the reason, and 
 | T-18 | 3 Baking | The page: Bake and Heritage tabs, with exact numbers before each purchase. **Risk: low.** | AC-20 | D-11 | ☐ |
 | T-19 | 4 Depth | Heirloom strains: drops, tiers, bonuses, names, slots, scrap, reroll. **Risk: medium.** | AC-24, AC-38, AC-39, AC-40, AC-67, AC-75, AC-78 | D-5, D-7 | ☐ |
 | T-33 | 4 Depth | Forays and Mold Monarch names, lines and grudges (design 5.6, 5.7). **Risk: low.** | AC-66, AC-67 | D-7 | ☐ |
-| T-36 | 4 Depth | Minute to minute: the next-goal line, raisins, splits and the bake advisor (design 18). **Risk: low.** | AC-79, AC-80, AC-81 | D-7 | ☐ |
-| T-20 | 4 Depth | The Bakery: loaves, the window, variety, full rows, the 8 arrangements (fix the list in the design first). **Risk: medium.** | AC-41, AC-42, AC-43 | D-7 | ☐ |
+| T-36 | 4 Depth | Minute to minute: the next-goal line, raisins, splits and the bake advisor (design 18). **Risk: low.** | AC-79, AC-80, AC-81, AC-88 | D-7 | ☐ |
+| T-38 | 4 Depth | The Fridge scene, Monarch portraits and the Great Rising (design 19). **Risk: low.** | AC-84 | D-1 | ☐ |
+| T-39 | 4 Depth | The Wall of the Risen, cell thoughts and the Feast (design 20). **Risk: low.** | AC-89, AC-90 | D-7 | ☐ |
+| T-20 | 4 Depth | The Bakery: loaves, the window, variety, full rows, the 8 arrangements of design 9.1, the rack's limit. **Risk: medium.** | AC-41, AC-42, AC-43, AC-86 | D-7 | ☐ |
 | T-21 | 4 Depth | Grain Trials: rules and rewards. **Risk: medium.** | AC-36, AC-37, AC-70 | D-7 | ☐ |
 | T-22 | 4 Depth | Automation helpers. **Risk: low.** | AC-44 | D-7 | ☐ |
 | T-23 | 4 Depth | Crumb Shots (40) and Chronicle pages (about 30); all text in `text.ts`. **Risk: low.** | AC-45, AC-46 | D-7 | ☐ |

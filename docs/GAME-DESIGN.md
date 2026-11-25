@@ -5,7 +5,8 @@
 Version 2 (2026-11-25) fixes the bugs found in version 1, specifies every edge case the code must handle,
 and adds four mechanics drawn from real sourdough: hydration, discard, doctrines and forays. Version 2.1 (the
 same day) adds what keeps a player coming back minute to minute (section 18) and closes the gaps a second
-review found. The starting constants were checked with a rough model of the first batches (section 16).
+review found. Version 2.2 adds the look (section 19), three more loops (section 20) and a third edge-case
+pass (section 21). The starting constants were checked with a rough model of the first batches (section 16).
 
 ## 1 The pitch
 
@@ -295,7 +296,7 @@ Bought with Mother. Level `n` costs `base × 1.35^n`.
 | Thrift | 20 | building costs ×0.97 (at most 20 levels) | after 2 bakes |
 | Cold Patience | 30 | time away counted +2 h (8 h at the start, at most 48 h) | after the first time away |
 | Sharing | 40 | Mother +5% | after shelf 20 |
-| Head Start | 25 | each batch starts with +10 cells and housing | after 5 bakes |
+| Head Start | 25 | each batch starts with +10 cells and housing (at most 10 levels) | after 5 bakes |
 | Lineage | 200 | +1 keepsake slot (at most 3) | after the first strain |
 
 **Memory you choose:** the bake screen lists the batch's research; the player ticks up to Memory's level.
@@ -334,7 +335,9 @@ with it.
 - **Every bake makes a loaf.** Kind: no Trial makes a Boule; Rye a Pumpernickel; Salt a Pretzel; Hot
   Kitchen a Focaccia; Whole Grain a Miche; Neglect a Hardtack; Contamination a Blue Loaf. Size: that
   batch's best shelf.
-- **The rack** holds every loaf not in the window. It has no limit.
+- **The rack** holds every loaf not in the window, up to 300. A loaf that would be the 301st sells the
+  smallest loaf in the rack, paying its refund, and the game says so. This keeps the save small after
+  thousands of timed bakes.
 - **The window** is 6×6. It opens with 6 cells (the bottom row) and one more each bake, filling rows left
   to right, bottom to top. Moving a loaf is free. Selling one refunds 10% of the Mother claimed in its bake.
 - **A loaf's bonus:** `size / 10` percent to its kind's stat: Boule growth, Pumpernickel flour, Pretzel guard
@@ -345,7 +348,7 @@ with it.
 ### 9.1 The eight arrangements
 
 Each is recognised anywhere in the window. Line and block shapes count in either orientation. Once
-completed, an arrangement stays completed even if the loaves move.
+completed, an arrangement stays completed even if the loaves move, and its reward is kept for good.
 
 | Arrangement | Shape | Reward |
 |---|---|---|
@@ -463,4 +466,60 @@ without punishing anyone who leaves.
   Chronicle line; the first unlock arrives within 30 seconds. No tutorial text box.
 - **Confirmations only where loss is real:** scrapping an Ancient or Legendary strain, selling a loaf, and
   abandoning a Trial. A strain can be locked so that scrapping all strains skips it.
+
+## 19 The look
+
+**Pixel art drawn by code, on one canvas, with no library and no image files.** Every sprite is built from
+small arrays of palette indices in `src/ui/sprites.ts`, so the art is as open source as the code, costs no
+download and has no licence to check. The scene is drawn at 192 × 256 pixels and scaled up by a whole number
+with smoothing off, so it stays crisp at any size.
+
+- **Palette:** 16 warm colours: flour white, crust browns, a honey gold, starter cream, sour greens for Tang,
+  and the fridge's cold blues and mold teals. Dark mode swaps the kitchen wall, never the jar.
+- **The jar:** a glass jar on a wooden counter, a rubber band marking the morning's level. The dough is a
+  soft cream mass whose top wobbles slowly. Its height follows the cells (on a log scale), its colour sours
+  with Tang, and its texture follows hydration: runny and glossy at 150%, stiff and matte at 50%.
+- **The town inside:** cells are 4-pixel blobs with a 1-pixel hat for their job (a miller's cap, a ponderer's
+  hood, a guard's helmet). They drift, gather and work. Bubbles rise and pop at the top. Buildings show as
+  shapes in the dough: Bubbles as round rooms, Gluten Halls as long arches, Crumb Cathedrals as tall spires.
+- **Juice:** a feed drops a puff of flour that settles; a bought building pushes a burst of bubbles; an
+  unlock rings a small chime-glint across the glass; a raisin tumbles in with a bounce and a sparkle.
+- **The Fridge:** a side view of a shelf of jars. The squad marches across as a line of helmeted cells. Molds
+  are fuzzy, shifting blobs; each Monarch has its own 32-pixel portrait and its line in a speech bubble.
+  Damage shows as small rising numbers.
+- **The Great Rising:** baking plays a 4-second scene, skippable: the dough goes into the oven, swells, the
+  crust browns, a spoonful of Mother is set aside in a small jar. The new loaf drops onto the Bakery shelf.
+- **Sound:** none at first; a later task may add a few soft sounds, off by default.
+- **Limits that keep it light:** at most 300 cell sprites and 60 particles are drawn, whatever the count;
+  the scene draws at most 30 frames a second, and not at all while the tab is hidden.
+- **Reduced motion:** the scene draws a still picture, updated when something changes; no wobble, drift or
+  particles. The Great Rising becomes a single frame.
+- **If the canvas cannot start,** the game runs with the panels alone and a line that says so.
+
+## 20 Three more loops
+
+- **The Wall of the Risen.** A guard squad that fells a Mold Monarch has its captain named (from the name
+  parts the strains use) and remembered on the Wall, which lasts across every bake: "Captain Mirela the
+  Sour, who felled the Blue Duchess on shelf 10, batch 4". The Wall holds the last 100 names. The cells
+  remember their heroes, and so does the player.
+- **Cell thoughts.** Clicking a cell in the jar shows its name and one line, picked by the seeded generator
+  from about 120 lines that fit its job, the doctrine and the batch: a Ponderer under Glass Philosophy might
+  think "If the glass has an outside, does the outside have a glass?". A new line unlocks with each
+  Chronicle page, so there is always something unread.
+- **The Feast.** Once per batch, after shelf 20, the cells may hold a Feast: for 60 s every job is ×2 and the
+  jar glows, but the guard squad stays home. The player picks the moment: before a hard Monarch, or to finish
+  a building. A Feast during time away is impossible; its button waits.
+
+## 21 Edge cases, third pass
+
+- **Raisins** give only rewards that work now: no gear before Acid Wall, no job boost to a job with no cells.
+  Their timers run in real seconds while the tab is visible, so Hot Kitchen does not double them.
+- **Splits** compare a batch only with the best batch of the same kind: a Trial batch races the best batch of
+  that Trial.
+- **Time away** runs automation helpers, except the Baker's timer: the jar never bakes while you are gone.
+  Daily flour and Feasts do not apply during time away.
+- **A read-only tab** (another tab is playing) shows the state but never steps the game.
+- **Importing a save** in one tab makes that tab the writer and raises the save counter, so the other tab
+  turns read-only.
+- **Graphics scale** with logarithms and caps, so 10 cells and 1e30 cells both draw a full, sensible jar.
 
