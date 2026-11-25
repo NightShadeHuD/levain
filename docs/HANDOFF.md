@@ -23,9 +23,9 @@ finding**: say so, do not reconcile it silently.
 ## 3. Current state
 
 ```
-REVISION:   T-1 done at 331dc43 by the main agent (Claude), 2026-11-25
-SUITE:      5 passed, 0 failed, 0 skipped at 331dc43 (floor 5)
-GATES:      17 of 24 pass; 7 unconfigured (formatting, ownership, product, digest, self-tests)
+REVISION:   T-1 done at 0068502 by the main agent (Claude), 2026-11-25
+SUITE:      5 passed, 0 failed, 0 skipped at 0068502 (floor 5)
+GATES:      18 of 24 pass; 6 unconfigured. agent-scaffold is installed locally and not tracked: after a clone, reinstall it (see .gitignore)
 NEXT:       T-2 (format and cost), SPEC.md section 4
 NOT DONE:   everything after T-1, in the Plan table
 ```
