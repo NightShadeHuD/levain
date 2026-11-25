@@ -1,0 +1,18 @@
+node_modules/
+dist/
+artifacts/
+# agent-scaffold: installed locally, never published (owner, 2026-11-25). Reinstall with agent-scaffold's
+# scripts/init-project.sh after a clone; rebuild gate.config with its onboard.py, then list docs/GAME-DESIGN.md
+# and docs/kilo-notes.md in UNCHECKED_DOC_FILES.
+tests/
+.claude/
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+gate.config
+docs/ACCEPTANCE.md
+docs/DESIGN.md
+docs/PRINCIPLES.md
+docs/SESSION-START.md
+docs/SHORTCUTS.md
+docs/THINKING.md
