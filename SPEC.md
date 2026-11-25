@@ -90,7 +90,7 @@ name, and "passes" means its output shows the test passed and none failed.
 | AC-32 | Claimed Mother is banked Mother times the Flavor bonus. | Run: `npx vitest run -t "bake: claimed Mother includes the Flavor bonus"`. True when: it passes |
 | AC-33 | Heritage costs and effects match the table. | Run: `npx vitest run -t "heritage: costs and effects match the table"`. True when: it passes |
 | AC-34 | Memory keeps research in table order. | Run: `npx vitest run -t "heritage: Memory keeps research in table order"`. True when: it passes |
-| AC-35 | The pacing bot meets every target in design section 14. | Run: `npm run sim`. True when: it prints `pacing: all targets met` and exits 0 |
+| AC-35 | The pacing bot meets every target in design section 16. | Run: `npm run sim`. True when: it prints `pacing: all targets met` and exits 0 |
 
 ### Depth
 
@@ -216,7 +216,7 @@ row's State when it changes. Strike a dropped task through with the reason, and 
 | Task | Phase | What it builds | Criteria | Decisions | State |
 |---|---|---|---|---|---|
 | T-1 | 0 Foundations | Vite, TypeScript and Vitest skeleton; the seeded generator and its test; the core purity test; agent-scaffold gates configured. **Risk: low.** | AC-1, AC-2, AC-3, AC-4, AC-5 | D-1, D-2, D-5 | done at `0068502` |
-| T-2 | 0 Foundations | `format.ts` (design section 15's table) and `cost.ts` (single cost, cost of n, most affordable n). **Risk: low.** | AC-6, AC-7, AC-58 | D-4, D-7 | ☐ |
+| T-2 | 0 Foundations | `format.ts` (design section 17's table) and `cost.ts` (single cost, cost of n, most affordable n). **Risk: low.** | AC-6, AC-7, AC-58 | D-4, D-7 | ☐ |
 | T-3 | 0 Foundations | `GameState`, `newGame(seed)`, `step(state, seconds)`, the Feed action, and the guard test against NaN, Infinity and negatives. **Risk: medium.** | AC-8, AC-9, AC-13, AC-55, AC-56, AC-57 | D-2, D-3 | ☐ |
 | T-4 | 0 Foundations | Saving: serialise, load, export, import, the version field, the migration list. **Risk: medium.** | AC-10, AC-11, AC-12, AC-74 | D-6 | ☐ |
 | T-5 | 1 One batch | Cells, growth and housing. **Risk: low.** | AC-14 | D-3, D-7 | ☐ |
@@ -235,7 +235,7 @@ row's State when it changes. Strike a dropped task through with the reason, and 
 | T-14 | 2 The Fridge | The page: Fridge tab, the return card. **Risk: low.** | AC-20 | D-11 | ☐ |
 | T-15 | 3 Baking | Bake: the gate, what is kept, claimed Mother, a loaf record. **Risk: high.** | AC-30, AC-31, AC-32 | D-6 | ☐ |
 | T-16 | 3 Baking | Heritage, including Memory. **Risk: medium.** | AC-33, AC-34, AC-69 | D-7 | ☐ |
-| T-17 | 3 Baking | The pacing bot (`npm run sim`) and tuning of `data.ts` until design section 14's targets hold. **Risk: medium.** | AC-35 | D-7 | ☐ |
+| T-17 | 3 Baking | The pacing bot (`npm run sim`) and tuning of `data.ts` until design section 16's targets hold. **Risk: medium.** | AC-35 | D-7 | ☐ |
 | T-18 | 3 Baking | The page: Bake and Heritage tabs, with exact numbers before each purchase. **Risk: low.** | AC-20 | D-11 | ☐ |
 | T-19 | 4 Depth | Heirloom strains: drops, tiers, bonuses, names, slots, scrap, reroll. **Risk: medium.** | AC-24, AC-38, AC-39, AC-40, AC-67, AC-75 | D-5, D-7 | ☐ |
 | T-33 | 4 Depth | Forays and Mold Monarch names, lines and grudges (design 5.6, 5.7). **Risk: low.** | AC-66, AC-67 | D-7 | ☐ |

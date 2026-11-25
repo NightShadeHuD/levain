@@ -23,17 +23,18 @@ finding**: say so, do not reconcile it silently.
 ## 3. Current state
 
 ```
-REVISION:   T-1 done at 0068502 by the main agent (Claude), 2026-11-25
-SUITE:      5 passed, 0 failed, 0 skipped at 0068502 (floor 5)
-GATES:      18 of 24 pass; 6 unconfigured. agent-scaffold is installed locally and not tracked: after a clone, reinstall it (see .gitignore)
-NEXT:       T-2 (format and cost), SPEC.md section 4
+REVISION:   design v2 at 4733e89, 2026-11-25; T-1 done at 0068502
+SUITE:      5 passed, 0 failed, 0 skipped (floor 5)
+GATES:      19 of 24 pass, including the privacy scan; 5 unconfigured. agent-scaffold is installed locally and not tracked: after a clone, reinstall it (see .gitignore)
+CREW:       Kilo, local models. Start the agent `first-officer`; it runs T-2 with @engineer, @verifier, @inspector and @wardroom
+NEXT:       T-2 (format and cost); brief: docs/briefs/T-2.md
 NOT DONE:   everything after T-1, in the Plan table
 ```
 
 ## 4. Next action
 
 ```
-T-2: src/core/format.ts and src/core/cost.ts, with the tests named by AC-6 and AC-7.
+T-2: build docs/briefs/T-2.md. Risk low: engineer, then verifier, then commit.
 It is next because every later task shows numbers and buys things.
 Safety: every T-1 test still passes; src/core still has no DOM, clock or Math.random.
 ```
