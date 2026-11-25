@@ -3,8 +3,9 @@
 *A civilization rises in a jar of sourdough starter.*
 
 Version 2 (2026-11-25) fixes the bugs found in version 1, specifies every edge case the code must handle,
-and adds four mechanics drawn from real sourdough: hydration, discard, doctrines and forays. The starting
-constants were checked with a rough model of the first batches (section 16).
+and adds four mechanics drawn from real sourdough: hydration, discard, doctrines and forays. Version 2.1 (the
+same day) adds what keeps a player coming back minute to minute (section 18) and closes the gaps a second
+review found. The starting constants were checked with a rough model of the first batches (section 16).
 
 ## 1 The pitch
 
@@ -51,6 +52,13 @@ These rules settle questions that would otherwise be decided differently in each
   A gap under 60 s is played as normal time. A gap of 60 s or more (a closed or hidden tab, a sleeping
   computer) is time away.
 - **A negative gap (the clock went back) counts as 0.** A gap is never larger than the time-away cap.
+- **The last-seen time is written with every save,** so a clock that goes back and then forward never pays
+  the same hours twice. Moving the clock forward on purpose is not prevented: it is a single-player game,
+  and the cap limits what it gives.
+- **Time away is played in 1-second steps** for speed; its result must match 0.1-second steps within 2%
+  (AC-26).
+- **Batch time** (for doctrines, Crumb Shots and splits) is game time since the batch began, time away
+  included.
 
 ### 3.2 Order of one step
 
@@ -119,8 +127,11 @@ A batch starts with 10 cells, housing for 10, and nothing else.
 | Guard | Acid Wall | fights (section 5) |
 
 - The player sets a number for each job. Cells with no job are idle.
-- If deaths leave fewer cells than jobs ask for, jobs are cut in this order until they fit: Guards' target
-  first is never cut (the squad is already gone), then Ponderers, Sourers, Fermenters, Enzymers, Millers.
+- If deaths leave fewer cells than the jobs ask for, jobs are cut until they fit, in this order: Ponderers,
+  Sourers, Fermenters, Enzymers, Millers. The guard target is never cut; a squad simply cannot form until
+  enough cells are idle.
+- **Feeding counts at most 10 times a second,** however fast the clicks or key repeats come. More are
+  ignored, so an auto-clicker gains little and the Devotion tally stays honest.
 
 ### 4.4 Hydration (research: Hydration)
 
@@ -192,7 +203,9 @@ doctrine, announced in the Chronicle. It lasts until the bake.
 | The Acid Creed | Valour | guard attack +30%, tang +20% | growth −20% |
 | The Middle Rise | no tally leads the next by 10% | +10% to every job | none |
 
-The first bake under each doctrine opens a Chronicle page and a Crumb Shot.
+The first bake under each doctrine opens a Chronicle page and a Crumb Shot. A batch baked before 15 minutes
+has no doctrine. From 10 minutes on, the Jar tab shows which way the cells are leaning, so a player can
+steer them.
 
 ## 5 The Fridge
 
@@ -241,15 +254,18 @@ a march anyway.
 
 When the squad cannot win, the player can send it back to a cleared shelf instead. A foray costs
 `10 × shelf` crackers, fights 5 jars of that shelf, pays ×3 jar rewards, and has a 25% chance of a strain
-of that shelf's odds if the shelf is 10 or above. Advancing waits while a foray runs.
+of that shelf's odds if the shelf is 10 or above. Advancing waits while a foray runs. A foray squad that loses comes home like any beaten squad (half die),
+the foray ends, and the crackers are spent. Baking during a foray ends it with nothing lost but the
+crackers.
 
 ### 5.7 The Mold Monarchs
 
 Eight Monarchs take turns, in order, shelf after shelf: Baron Penicillin the Patient, the Blue Duchess,
 Lord Rhizopus of the Bread Bin, Old Fuzz, the Pink Pretender, Countess Aspergilla, the Grey Abbot and Sir
 Botrytis. Each has one line when it appears, one when it wins and one when it falls (in `text.ts`).
-**Grudges:** a Monarch that beat a squad in the last batch has +10% HP, and drops a strain one tier
-higher, the next time.
+**Grudges:** a Monarch that beats a squad holds a grudge until it is defeated, in this batch or a later one.
+While it holds one it has +10% HP, and when it falls it drops a strain one tier higher (Legendary stays
+Legendary). The Fridge tab shows which Monarchs hold grudges.
 
 ## 6 Baking
 
@@ -294,7 +310,7 @@ Research whose prerequisite is not kept cannot be kept.
   tier's range: Common 2–5, Hearty 4–8, Robust 7–12, Ancient 10–18, Legendary 15–25.
 - **Names** are built from parts: "the Hearty Rye of Grandmother Ilse". They have no effect.
 - **Slots:** 2 active (+1 from the Contamination Trial, +1 at 10 bakes); keepsakes from Lineage; and a
-  shelf of 20. The shelf is emptied at a bake. A strain that drops onto a full shelf is turned into spores
+  shelf of 20. At a bake, every strain left on the shelf turns into spores, so nothing simply vanishes. A strain that drops onto a full shelf is turned into spores
   at once, and the game says so.
 - **Scrap:** spores equal to the tier's rank. **Reroll** one bonus: `10 × 2^r` spores, where r is the
   rerolls already done on that strain.
@@ -376,7 +392,8 @@ Each can be switched off.
 
 ## 13 Daily flour
 
-Once per UTC day a sack of special flour arrives, picked by the date, so everyone gets the same one: 12
+Once per UTC day a sack of special flour arrives, picked by the date (the page passes the day number to the
+rules, which never read the clock), so everyone gets the same one: 12
 kinds, such as Spelt (+25% flour), Einkorn (+25% growth), Emmer (+25% tang). Using it is a choice, its
 bonus lasts until the UTC day ends, and missing a day costs nothing.
 
@@ -401,7 +418,7 @@ bonus lasts until the UTC day ends, and missing a day costs nothing.
 
 The constants in this document are starting values. A rough model (1-second steps, a simple bot) gave, for
 the first batch: Fermentation at 2.1 minutes, the Fridge at 12.6, shelf 10 at 37.0, about 280 Mother; the
-second batch reached shelf 10 about 10% sooner. Version 1's constants failed it: shelf 10 at 16 minutes, 3
+second batch reached shelf 10 about 10% sooner, which misses the target below: tuning must fix it. Version 1's constants failed it: shelf 10 at 16 minutes, 3
 Mother at the first bake, and a death spiral that left 3 cells of 325. T-17 builds the real bot against
 the real rules and tunes `data.ts` until these targets hold:
 
@@ -425,3 +442,25 @@ the real rules and tunes `data.ts` until these targets hold:
 - **Numbers:** plain up to 999,999; then K, M, B, T, Qa, Qi, Sx, Sp, Oc, No, Dc; then scientific (1.23e36).
   Settings can switch to scientific throughout.
 - **Keyboard:** every action can be reached with the keyboard, with visible focus.
+
+## 18 Minute to minute: what brings the player back
+
+Version 1 gave a player reasons to return after hours. These give reasons to stay for one more minute,
+without punishing anyone who leaves.
+
+- **The next goal.** Under the jar, one line always names the nearest unlock and how far off it is: "Acid
+  Wall: 180 of 250 murmurs". There is always a next thing.
+- **Raisins.** While the tab is visible, a raisin drops into the jar every 3 to 8 minutes (picked by the seeded
+  random numbers). Clicking it within 10 s gives one of: 30 s of ×3 to one job, 60 s of production at once, or
+  a free gear level. A missed raisin just sinks; nothing is lost. Raisins never fall during time away, so
+  nobody is punished for leaving. Catching 100 is a Crumb Shot.
+- **Splits.** The game remembers the best batch's game time to each fifth shelf and shows the current batch
+  against it, in green or red: "shelf 15: 2:10 ahead". Each batch becomes a race against your own best.
+- **The bake advisor.** The Bake tab shows the Mother a bake would claim now, the Mother per minute of this
+  batch, and the best batch's rate. When the rate has fallen for 5 minutes, it says "the dough has peaked".
+  The choice stays the player's.
+- **The first minute.** A new game shows only the jar and Feed. The first feed shows a cell dividing and a
+  Chronicle line; the first unlock arrives within 30 seconds. No tutorial text box.
+- **Confirmations only where loss is real:** scrapping an Ancient or Legendary strain, selling a loaf, and
+  abandoning a Trial. A strain can be locked so that scrapping all strains skips it.
+
