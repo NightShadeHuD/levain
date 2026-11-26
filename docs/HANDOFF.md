@@ -23,20 +23,20 @@ finding**: say so, do not reconcile it silently.
 ## 3. Current state
 
 ```
-REVISION:   T-2 done at aee98d9 (with a rounding bug: T-2b fixes it), 2026-11-25
+REVISION:   T-2b done at 3859cc8, 2026-11-26
 SUITE:      11 passed, 0 failed, 0 skipped (floor 5)
-GATES:      all gates judge again (6, 7 and 8 could not judge during T-2: a local scaffold path, now fixed). Over T-2's change gate 8 FAILS: a breaks text occurs twice and the tests sit in describe blocks. T-2b fixes both.
+GATES:      19 of 24 pass, 5 skipped as unconfigured, 0 could not judge; all 3 of T-2b's breaks caught by their checks
 CREW:       Kilo, local models. Start `kilo`: it opens on the First Officer
-NEXT:       T-2b (rounding fix); brief: docs/briefs/T-2b.md
-NOT DONE:   everything after T-2b, in the Plan table
+NEXT:       T-3 (GameState, step, the Feed action, the guard test); brief: docs/briefs/T-3.md
+NOT DONE:   everything after T-3, in the Plan table
 ```
 
 ## 4. Next action
 
 ```
-T-2b: build docs/briefs/T-2b.md. Risk medium: wardroom, engineer, verifier, inspector, then commit.
-It is next because T-2 shipped with costs rounding to the nearest value above a million (1.231M showed 1.23M).
-Safety: every T-1 and T-2 test still passes; no gate may say COULD NOT JUDGE before a commit.
+T-3: build docs/briefs/T-3.md. Risk medium: wardroom, engineer, verifier, inspector, then commit.
+It is next because it is the next open row in the plan table; its state and step function are what every later task builds on.
+Safety: every T-1, T-2 and T-2b test still passes; no gate may say COULD NOT JUDGE before a commit.
 ```
 
 Work rules for every task:

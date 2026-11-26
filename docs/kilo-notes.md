@@ -38,3 +38,17 @@ receipt written: artifacts/gates-receipt verified at b57d84b
 - A gate that cannot judge is a finding, not a failure: record where the answer is unavailable, and let the run's own exit status do the talking.
 - When a helper's file reads arrive mangled, paste the content into the resumed task before suspecting the tree.
 **Models:** built by the harness default subagent model (unpinned); verified by @verifier only (risk low, no inspector).
+
+### 2026-11-26 T-2b: number rounding fixed, committed at 3859cc8
+**What happened:** @engineer built roundSig in format.ts (floor for amounts, ceil for costs at three significant figures, integer FP correction, q=1000 carries to the next suffix), restructured both test files to top-level test calls keeping T-2's three names, and changed the two assertions that pinned the old wrong rounding (999999999 -> 999M, 1000000.1 -> 1.01M). @verifier ran every done-means command, all exit 0. @inspector (risk medium) reported PASS with 0 Important findings over 2 rounds. Nine briefs (T-3, T-4, T-5, T-6, T-7, T-8, T-9, T-31, T-34) went in the same commit with their check names made full (test/<file>.<suite>: <name>) so the gates' breaks and planted-bug checks find the tests.
+**Gate run:**
+```
+19 of 24 GATE(S) PASSED: 19 ran, 5 skipped as unconfigured
+  5 skipped gate(s) are rules this project does NOT check; the count names how many ran.
+```
+**Went wrong:**
+- The scope file was missing from the tree at step H although the handoff said scope was locked. Re-locked to the four may-change paths and re-ran; gate 12 then passed.
+- The engineer's pre-compaction attempt count is not preserved; the crew-log attempts column is 1, taken from the absence of any recorded retry.
+**Lesson:**
+- A handoff that says the scope is locked should say so with the file present: a lock is only as good as the file that carries it.
+**Models:** built by the harness default subagent model (unpinned); reviewed by @inspector (0 Important findings); verified by @verifier.
