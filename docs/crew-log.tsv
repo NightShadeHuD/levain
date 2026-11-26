@@ -1,1 +1,2 @@
 date	task	risk	model	effort	attempts	gate result	input	cache-write	cache-read	output	reviewer
+2026-11-25T22:27:36Z	T-2	low	default	default	2	gates exit 0: 16 of 24 pass, 3 could not judge (6,7 junit adapter missing in the scaffold copy; 17 osv-scanner), 5 unconfigured	-	-	-	-	-
