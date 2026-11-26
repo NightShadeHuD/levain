@@ -23,21 +23,20 @@ finding**: say so, do not reconcile it silently.
 ## 3. Current state
 
 ```
-REVISION:   T-2 done at aee98d9, 2026-11-25; design v2 at 4733e89
+REVISION:   T-2 done at aee98d9 (with a rounding bug: T-2b fixes it), 2026-11-25
 SUITE:      11 passed, 0 failed, 0 skipped (floor 5)
-GATES:      16 of 24 pass, including the privacy scan; 3 could not judge (gates 6 and 7: the scaffold's own copy is missing tests/adapters/junit.py, so the isolated test runs cannot count; gate 17: osv-scanner not installed); 5 unconfigured. agent-scaffold is installed locally and not tracked: after a clone, reinstall it (see .gitignore)
-CREW:       Kilo, local models. Start the agent `first-officer`; it runs T-3 with @engineer, @verifier, @inspector and @wardroom
-NEXT:       T-3 (game state and step); brief: docs/briefs/T-3.md
-NOT DONE:   everything after T-2, in the Plan table
+GATES:      all gates judge again (6, 7 and 8 could not judge during T-2: a local scaffold path, now fixed). Over T-2's change gate 8 FAILS: a breaks text occurs twice and the tests sit in describe blocks. T-2b fixes both.
+CREW:       Kilo, local models. Start `kilo`: it opens on the First Officer
+NEXT:       T-2b (rounding fix); brief: docs/briefs/T-2b.md
+NOT DONE:   everything after T-2b, in the Plan table
 ```
 
 ## 4. Next action
 
 ```
-T-3: build docs/briefs/T-3.md. Risk medium: wardroom, then engineer, verifier, inspector, then commit.
-It is next because it is the next row of the Plan table, and every later task steps the state it defines.
-Safety: every T-1 and T-2 test still passes; src/core still has no DOM, clock or Math.random.
-Unresolved: gates 6 and 7 (a change caught by a test, a planted bug) cannot judge on this machine - the scaffold's copy under .git/agent-scaffold/copy is missing tests/adapters/junit.py. Until the local agent-scaffold install is repaired, a code task's gate run will show them as could-not-judge, not passed.
+T-2b: build docs/briefs/T-2b.md. Risk medium: wardroom, engineer, verifier, inspector, then commit.
+It is next because T-2 shipped with costs rounding to the nearest value above a million (1.231M showed 1.23M).
+Safety: every T-1 and T-2 test still passes; no gate may say COULD NOT JUDGE before a commit.
 ```
 
 Work rules for every task:

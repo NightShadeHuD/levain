@@ -233,6 +233,7 @@ row's State when it changes. Strike a dropped task through with the reason, and 
 |---|---|---|---|---|---|
 | T-1 | 0 Foundations | Vite, TypeScript and Vitest skeleton; the seeded generator and its test; the core purity test; agent-scaffold gates configured. **Risk: low.** | AC-1, AC-2, AC-3, AC-4, AC-5 | D-1, D-2, D-5 | done at `0068502` |
 | T-2 | 0 Foundations | `format.ts` (design section 17's table) and `cost.ts` (single cost, cost of n, most affordable n). **Risk: low.** | AC-6, AC-7, AC-58 | D-4, D-7 | done at `aee98d9` |
+| T-2b | 0 Foundations | Fix T-2's rounding: amounts down and costs up at three significant figures in every form; tests made top-level so the gates find them (brief docs/briefs/T-2b.md). **Risk: medium.** | AC-6, AC-7, AC-58 | D-4, D-7 | ☐ |
 | T-3 | 0 Foundations | `GameState`, `newGame(seed)`, `step(state, seconds)`, the Feed action, and the guard test against NaN, Infinity and negatives. **Risk: medium.** | AC-8, AC-9, AC-13, AC-56, AC-77 | D-2, D-3 | ☐ |
 | T-4 | 0 Foundations | Saving: serialise, load, export, import, the version field, the migration list. **Risk: medium.** | AC-10, AC-11, AC-12, AC-74 | D-6 | ☐ |
 | T-5 | 1 One batch | Cells, growth and housing. **Risk: low.** | AC-14 | D-3, D-7 | ☐ |
