@@ -39,7 +39,7 @@
 - **Breaks:**
 
 ```
-format: numbers match the table fails when src/core/format.ts has `Math.floor(x / scale)` as `Math.round(x / scale)`
-format: costs round up, amounts down, affordability is exact fails when src/core/format.ts has `Math.ceil(x / scale)` as `Math.round(x / scale)`
-cost: buying n at once costs the same as n single buys fails when src/core/cost.ts has `factor - 1` as `factor + 1`
+test/format.test.ts.format: numbers match the table fails when src/core/format.ts has `const val = Math.floor(x);` as `const val = Math.ceil(x);`
+test/format.test.ts.format: costs round up, amounts down, affordability is exact fails when src/core/format.ts has `if (up) {` as `if (!up) {`
+test/cost.test.ts.cost: buying n at once costs the same as n single buys fails when src/core/cost.ts has `factor - 1` as `factor + 1`
 ```
